@@ -3,115 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fotios - CS Student | University of Piraeus</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Fotios | Software Engineer & Cybersecurity</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar">
-        <div class="container">
-            <div class="logo">Fotios</div>
-            <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#skills">Skills</a></li>
-            </ul>
+        <div class="nav-content">
+            <a href="#" class="logo">Fotios</a>
+            <div class="nav-links">
+                <a href="#about" class="nav-link">About</a>
+                <a href="#experience" class="nav-link">Experience</a>
+                <a href="#skills" class="nav-link">Tools</a>
+                <a href="#interests" class="nav-link">Interests</a>
+                <a href="#connect" class="nav-link">Connect</a>
+            </div>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <span class="toggle-icon">☾</span>
+            </button>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1 class="hero-title">Computer Science<br>Student & Developer</h1>
-                <p class="hero-subtitle">Crafting elegant solutions at University of Piraeus</p>
-                <div class="hero-cta">
-                    <a href="#projects" class="btn btn-primary">View My Work</a>
-                    <a href="https://github.com/fotios11" class="btn btn-secondary" target="_blank">GitHub</a>
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Fotios Machattos</h1>
+            <p class="hero-subtitle">Software Engineer & Cybersecurity Specialist</p>
+            <p class="hero-description">3rd-year Computer Science student at the University of Piraeus, balancing technical expertise with 6+ years of operational leadership</p>
+        </div>
+    </section>
+
+    <!-- Main Content Grid -->
+    <main class="container">
+        <!-- About / Narrative -->
+        <section class="narrative" id="about">
+            <h2>About</h2>
+            <p>3rd-year Computer Science student at the University of Piraeus with a passion for precision engineering and critical thinking. My academic foundation in computer science intersects uniquely with 6+ years of operational leadership at Folio Restaurant, where I've refined my ability to make data-driven decisions, lead diverse teams, and translate complex problems into actionable solutions. This blend of technical rigor and strategic thinking shapes how I approach software development and security.</p>
+        </section>
+
+        <!-- Experience Grid -->
+        <section class="experience" id="experience">
+            <h2>Experience</h2>
+            <div class="experience-grid">
+                <div class="experience-card">
+                    <div class="exp-header">
+                        <h3>General Manager</h3>
+                        <span class="exp-date">2019 — Present</span>
+                    </div>
+                    <p class="exp-company">Folio Restaurant</p>
+                    <p class="exp-desc">Leading operational strategy, team development, and business growth. Managing budgets, staff coordination, and customer experience to drive sustainable performance and competitive positioning in fine dining.</p>
+                </div>
+                <div class="experience-card">
+                    <div class="exp-header">
+                        <h3>IT & Cybersecurity</h3>
+                        <span class="exp-date">Aug — Sep 2025</span>
+                    </div>
+                    <p class="exp-company">Ayia Napa Marina</p>
+                    <p class="exp-desc">Gained hands-on exposure to enterprise networking and virtualization while contributing to software development tasks. Actively observed the application of cybersecurity protocols in a maritime environment.</p>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Academic Section -->
-    <section id="about" class="academic">
-        <div class="container">
-            <h2 class="section-title">Education</h2>
-            <div class="academic-content">
-                <div class="academic-card">
-                    <div class="academic-icon">🎓</div>
-                    <h3>University of Piraeus</h3>
-                    <p class="academic-major">Computer Science</p>
-                    <p class="academic-description">
-                        Studying computer science with focus on algorithms, data structures, 
-                        software engineering, and modern web technologies.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Projects Section -->
-    <section id="projects" class="projects">
-        <div class="container">
-            <h2 class="section-title">Featured Projects</h2>
-            <div class="projects-grid" id="projects-grid">
-                <!-- Projects will be loaded from GitHub API -->
-                <div class="loading">Loading projects...</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Skills Section -->
-    <section id="skills" class="skills">
-        <div class="container">
-            <h2 class="section-title">Skills & Technologies</h2>
+        <!-- Technical Stack -->
+        <section class="skills" id="skills">
+            <h2>Tools & Adaptability</h2>
             <div class="skills-grid">
-                <div class="skill-category">
-                    <h3>Languages</h3>
-                    <div class="skill-tags">
-                        <span class="skill-tag">Python</span>
-                        <span class="skill-tag">JavaScript</span>
-                        <span class="skill-tag">Java</span>
-                        <span class="skill-tag">C++</span>
-                        <span class="skill-tag">SQL</span>
-                    </div>
-                </div>
+                <div class="skill-item">Python</div>
+                <div class="skill-item">Java</div>
+                <div class="skill-item">C++</div>
+                <div class="skill-item">HTML & CSS</div>
+            </div>
+            <p class="skills-note">Core languages with strong fundamentals. Quick learner who adapts to new frameworks and technologies as projects demand.</p>
+        </section>
 
-                <div class="skill-category">
-                    <h3>Web Development</h3>
-                    <div class="skill-tags">
-                        <span class="skill-tag">HTML/CSS</span>
-                        <span class="skill-tag">React</span>
-                        <span class="skill-tag">Node.js</span>
-                        <span class="skill-tag">REST APIs</span>
-                        <span class="skill-tag">Git</span>
-                    </div>
+        <!-- Current Interests -->
+        <section class="focus" id="interests">
+            <h2>Current Interests</h2>
+            <div class="focus-grid">
+                <div class="focus-card">
+                    <h3>Software Development</h3>
+                    <p>Building robust, scalable applications with clean architecture and best practices.</p>
                 </div>
-
-                <div class="skill-category">
-                    <h3>Tools & Platforms</h3>
-                    <div class="skill-tags">
-                        <span class="skill-tag">VS Code</span>
-                        <span class="skill-tag">GitHub</span>
-                        <span class="skill-tag">Linux</span>
-                        <span class="skill-tag">Docker</span>
-                        <span class="skill-tag">PostgreSQL</span>
-                    </div>
+                <div class="focus-card">
+                    <h3>Cybersecurity</h3>
+                    <p>Exploring the fundamentals of network security, threat modeling, and defensive architecture as I progress through my academic studies.</p>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <!-- Social Links -->
+        <section class="social" id="connect">
+            <h2>Connect</h2>
+            <div class="social-grid">
+                <a href="https://www.linkedin.com/in/fotios-machattos/" class="social-link" target="_blank" rel="noopener noreferrer">
+                    <img src="icons/linkedin.png" alt="LinkedIn" class="social-icon">
+                    <span class="social-text">LinkedIn</span>
+                </a>
+                <a href="https://github.com/fotios11" class="social-link" target="_blank" rel="noopener noreferrer">
+                    <img src="icons/github.png" alt="GitHub" class="social-icon">
+                    <span class="social-text">GitHub</span>
+                </a>
+                <a href="https://www.instagram.com/fmachattos11/" class="social-link" target="_blank" rel="noopener noreferrer">
+                    <img src="icons/instagram.png" alt="Instagram" class="social-icon">
+                    <span class="social-text">Instagram</span>
+                </a>
+                <a href="https://www.facebook.com/fotios.machattos" class="social-link" target="_blank" rel="noopener noreferrer">
+                    <img src="icons/facebook.png" alt="Facebook" class="social-icon">
+                    <span class="social-text">Facebook</span>
+                </a>
+            </div>
+        </section>
+    </main>
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <p>&copy; 2025 Fotios. Built with vanilla HTML, CSS & JavaScript.</p>
-            <div class="footer-links">
-                <a href="https://github.com/fotios11" target="_blank">GitHub</a>
-                <a href="https://linkedin.com" target="_blank">LinkedIn</a>
-                <a href="mailto:your.email@example.com">Email</a>
+        <div class="footer-content">
+            <p class="copyright">&copy; 2026 Fotios Machattos</p>
+            <div class="personal-icons">
+                <div class="personal-icon" title="Karate Black Belt (1st DAN)">
+                    <span class="icon-symbol">空手</span>
+                    <span class="icon-label">Karate</span>
+                </div>
+                <div class="personal-icon" title="Photography Enthusiast">
+                    <span class="icon-symbol">📷</span>
+                    <span class="icon-label">Photography</span>
+                </div>
             </div>
         </div>
     </footer>
