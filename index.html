@@ -3,133 +3,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fotios Machattos</title>
+    <title>Fotios Machattos - Portfolio</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-content">
-            <a href="#" class="logo">Fotios</a>
-            <div class="nav-links">
-                <a href="#about" class="nav-link">About</a>
-                <a href="#experience" class="nav-link">Experience</a>
-                <a href="#skills" class="nav-link">Tools</a>
-                <a href="#interests" class="nav-link">Interests</a>
-                <a href="#connect" class="nav-link">Connect</a>
+    <header class="sticky-header">
+        <div class="header-container">
+            <a href="#" class="logo" id="logoLink">Fotios Machattos</a>
+
+            <nav class="nav-menu">
+                <a href="#about">About</a>
+                <a href="#experience">Experience</a>
+                <a href="#skills">Skills</a>
+                <a href="#interests">Interests</a>
+                <a href="#contact">Contact</a>
+            </nav>
+
+            <div class="header-buttons">
+                <button class="theme-btn" id="themeToggle">Theme</button>
             </div>
-            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-                <span class="toggle-icon">☾</span>
-            </button>
         </div>
-    </nav>
+    </header>
 
-    <!-- Hero -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Fotios Machattos</h1>
-            <p class="hero-subtitle">Computer Science Student</p>
-            <p class="hero-description">Currently in the 3rd-year of Computer Science Studies at the University of Piraeus, balancing technical expertise with 6+ years of operational leadership</p>
-        </div>
-    </section>
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="blur-bg">
+                <div class="blur-blob blur-blob-1"></div>
+                <div class="blur-blob blur-blob-2"></div>
+            </div>
 
-    <!-- Main Content Grid -->
-    <main class="container">
-        <!-- About / Narrative -->
-        <section class="narrative" id="about">
-            <h2>About</h2>
-            <p>3rd-year Computer Science student at the University of Piraeus with a passion for precision engineering and critical thinking. My academic foundation in computer science intersects uniquely with 6+ years of operational leadership at Folio Restaurant, where I've refined my ability to make data-driven decisions, lead diverse teams, and translate complex problems into actionable solutions. This blend of technical rigor and strategic thinking shapes how I approach software development and security.</p>
-        </section>
+            <div class="hero-container">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        Fotios <br>
+                        Machattos
+                    </h1>
 
-        <!-- Experience Grid -->
-        <section class="experience" id="experience">
-            <h2>Experience</h2>
-            <div class="experience-grid">
-                <div class="experience-card">
-                    <div class="exp-header">
-                        <h3>General Manager</h3>
-                        <span class="exp-date">2019 — Present</span>
+                    <p class="hero-subtitle">Computer Science Student | University of Piraeus</p>
+
+                    <p class="hero-description">
+                        Currently immersed in my Computer Science studies, refining my technical skills 
+                        and exploring new methodologies in software development and network security.
+                    </p>
+
+                    <div class="hero-buttons">
+                        <a href="#contact" class="btn btn-primary">Get in Touch</a>
                     </div>
-                    <p class="exp-company">Folio Restaurant</p>
-                    <p class="exp-desc">Leading operational strategy, team development, and business growth. Managing budgets, staff coordination, and customer experience to drive sustainable performance and competitive positioning in fine dining.</p>
                 </div>
-                <div class="experience-card">
-                    <div class="exp-header">
-                        <h3>IT & Cybersecurity</h3>
-                        <span class="exp-date">Aug — Sep 2025</span>
+
+                <div class="hero-card">
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <p class="stat-label">Experience</p>
+                            <h3 class="stat-value">6+</h3>
+                            <p class="stat-text">Years Leadership</p>
+                        </div>
+
+                        <div class="stat-box">
+                            <p class="stat-label">Focus</p>
+                            <h3 class="stat-value stat-focus">Cybersecurity</h3>
+                            <p class="stat-text">& Development</p>
+                        </div>
+
+                        <div class="stat-box stat-box-full">
+                            <p class="stat-label">Core Philosophy</p>
+                            <p class="stat-philosophy">
+                                Precision, adaptability, and clean architectural thinking.
+                            </p>
+                        </div>
                     </div>
-                    <p class="exp-company">Ayia Napa Marina</p>
-                    <p class="exp-desc">Gained hands-on exposure to enterprise networking and virtualization while contributing to software development tasks. Actively observed the application of cybersecurity protocols in a maritime environment.</p>
                 </div>
             </div>
         </section>
 
-        <!-- Technical Stack -->
-        <section class="skills" id="skills">
-            <h2>Tools & Adaptability</h2>
-            <div class="skills-grid">
-                <div class="skill-item">Python</div>
-                <div class="skill-item">Java</div>
-                <div class="skill-item">C++</div>
-                <div class="skill-item">HTML & CSS</div>
-            </div>
-            <p class="skills-note">Core languages with strong fundamentals. Quick learner who adapts to new frameworks and technologies as projects demand.</p>
-        </section>
+        <!-- About Section -->
+        <section id="about" class="about-section">
+            <div class="container">
+                <div class="about-card">
+                    <div class="about-grid">
+                        <div class="about-left">
+                            <p class="section-label">About Me</p>
+                            <h2 class="section-title">
+                                A blend of technology, leadership, and strategic thinking.
+                            </h2>
+                        </div>
 
-        <!-- Current Interests -->
-        <section class="focus" id="interests">
-            <h2>Current Interests</h2>
-            <div class="focus-grid">
-                <div class="focus-card">
-                    <h3>Software Development</h3>
-                    <p>Building robust, scalable applications with clean architecture and best practices.</p>
-                </div>
-                <div class="focus-card">
-                    <h3>Cybersecurity</h3>
-                    <p>Exploring the fundamentals of network security, threat modeling, and defensive architecture as I progress through my academic studies.</p>
+                        <div class="about-right">
+                            <p class="about-text">
+                                3rd-year Computer Science student with a focus on precision engineering and
+                                critical thinking. Academic foundation in technology integrated with 6+ years
+                                of operational leadership, focusing on data-driven solutions and strategic
+                                problem-solving in software development and security.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Social Links -->
-        <section class="social" id="connect">
-            <h2>Connect</h2>
-            <div class="social-grid">
-                <a href="https://www.linkedin.com/in/fotios-machattos/" class="social-link" target="_blank" rel="noopener noreferrer">
-                    <img src="icons/linkedin.png" alt="LinkedIn" class="social-icon">
-                    <span class="social-text">LinkedIn</span>
-                </a>
-                <a href="https://github.com/fotios11" class="social-link" target="_blank" rel="noopener noreferrer">
-                    <img src="icons/github.png" alt="GitHub" class="social-icon">
-                    <span class="social-text">GitHub</span>
-                </a>
-                <a href="https://www.instagram.com/fmachattos11/" class="social-link" target="_blank" rel="noopener noreferrer">
-                    <img src="icons/instagram.png" alt="Instagram" class="social-icon">
-                    <span class="social-text">Instagram</span>
-                </a>
-                <a href="https://www.facebook.com/fotios.machattos" class="social-link" target="_blank" rel="noopener noreferrer">
-                    <img src="icons/facebook.png" alt="Facebook" class="social-icon">
-                    <span class="social-text">Facebook</span>
-                </a>
+        <!-- Experience Section -->
+        <section id="experience" class="experience-section">
+            <div class="container">
+                <div class="experience-header">
+                    <div>
+                        <p class="section-label">Experience</p>
+                        <h2 class="section-title">Professional Background</h2>
+                    </div>
+                </div>
+
+                <div class="experience-grid">
+                    <div class="experience-card">
+                        <div class="experience-header-inner">
+                            <h3 class="experience-title">General Manager</h3>
+                            <span class="date-badge">2019 — Present</span>
+                        </div>
+
+                        <p class="experience-company">Folio Restaurant</p>
+
+                        <p class="experience-description">
+                            Leading operational strategy and team development, managing budgets and staff
+                            coordination to drive business growth and optimize day-to-day performance.
+                        </p>
+                    </div>
+
+                    <div class="experience-card">
+                        <div class="experience-header-inner">
+                            <h3 class="experience-title">IT & Cybersecurity</h3>
+                            <span class="date-badge">Aug — Sep 2025</span>
+                        </div>
+
+                        <p class="experience-company">Ayia Napa Marina</p>
+
+                        <p class="experience-description">
+                            Hands-on exposure to enterprise networking, virtualization, and software
+                            development tasks in a modern infrastructure environment.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills & Interests Section -->
+        <section id="skills" class="skills-section">
+            <div class="container">
+                <div class="skills-grid">
+                    <div class="skills-card">
+                        <p class="section-label">Tools & Skills</p>
+
+                        <div class="skills-tags">
+                            <span class="skill-tag">Python</span>
+                            <span class="skill-tag">Java</span>
+                            <span class="skill-tag">C++</span>
+                            <span class="skill-tag">HTML & CSS</span>
+                        </div>
+
+                        <p class="skills-description">
+                            Focused on building strong software engineering fundamentals and adapting quickly
+                            to modern frameworks and technologies.
+                        </p>
+                    </div>
+
+                    <div class="interests-card" id="interests">
+                        <p class="section-label">Interests</p>
+
+                        <div class="interests-list">
+                            <div class="interest-item">
+                                <h3 class="interest-title">Software Development</h3>
+                                <p class="interest-description">
+                                    Scalable applications, clean architecture, and efficient systems design.
+                                </p>
+                            </div>
+
+                            <div class="interest-item">
+                                <h3 class="interest-title">Cybersecurity</h3>
+                                <p class="interest-description">
+                                    Network security, infrastructure protection, and threat modeling concepts.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Highlights & Contact Section -->
+        <section class="highlights-section">
+            <div class="container">
+                <div class="highlights-grid">
+                    <div class="highlights-card">
+                        <p class="section-label">Personal Highlights</p>
+
+                        <div class="highlights-list">
+                            <div class="highlight-item">
+                                <span class="highlight-text">Karate Black Belt</span>
+                                <span class="highlight-badge">1st DAN</span>
+                            </div>
+
+                            <div class="highlight-item">
+                                <span class="highlight-text">Photography</span>
+                                <span class="highlight-badge">Enthusiast</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="contact-card" id="contact">
+                        <p class="section-label">Socials & Contact</p>
+
+                        <div class="socials-grid">
+                            <a href="https://www.linkedin.com/in/fotios-machattos/" class="social-link">
+                                <span>LinkedIn</span>
+                                <span class="arrow">↗</span>
+                            </a>
+                            <a href="https://github.com/fotios11" class="social-link">
+                                <span>GitHub</span>
+                                <span class="arrow">↗</span>
+                            </a>
+                            <a href="https://www.instagram.com/fmachattos11/" class="social-link">
+                                <span>Instagram</span>
+                                <span class="arrow">↗</span>
+                            </a>
+                            <a href="https://www.facebook.com/fotios.machattos/" class="social-link">
+                                <span>Facebook</span>
+                                <span class="arrow">↗</span>
+                            </a>
+                        </div>
+
+                        <p class="contact-note">
+                            Add your social profile URLs and resume PDF file path to fully personalize the
+                            website before deployment.
+                        </p>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
 
-    <!-- Footer -->
     <footer class="footer">
-        <div class="footer-content">
-            <p class="copyright">&copy; 2026 Fotios Machattos</p>
-            <div class="personal-icons">
-                <div class="personal-icon" title="Karate Black Belt (1st DAN)">
-                    <span class="icon-symbol">空手</span>
-                    <span class="icon-label">Karate</span>
-                </div>
-                <div class="personal-icon" title="Photography Enthusiast">
-                    <span class="icon-symbol">📷</span>
-                    <span class="icon-label">Photography</span>
-                </div>
-            </div>
+        <div class="footer-container">
+            <p>© 2026 Fotios Machattos. All rights reserved.</p>
         </div>
     </footer>
 
