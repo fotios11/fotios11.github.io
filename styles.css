@@ -43,6 +43,8 @@ html.dark {
 
 html {
     scroll-behavior: smooth;
+    scrollbar-gutter: stable;
+    overflow-y: scroll;
 }
 
 @keyframes float {
