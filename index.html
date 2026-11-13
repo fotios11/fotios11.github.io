@@ -90,11 +90,17 @@
     ::selection { background: var(--signal); color: var(--bg); }
     :focus-visible { outline: 2px dashed var(--signal); outline-offset: 3px; }
     strong { color: var(--fg); font-weight: 600; }
+    p { text-wrap: pretty; }
+    h1, h2, h3, h4 { text-wrap: balance; }
 
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--line-h); }
 
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; overflow: hidden;
+      clip-path: inset(50%); white-space: nowrap;
+    }
     .skip {
       position: absolute; left: 16px; top: -60px; z-index: 2000;
       background: var(--fg); color: var(--bg); padding: 8px 14px;
@@ -106,6 +112,7 @@
     .crt-scan {
       background: repeating-linear-gradient(to bottom, transparent 0 2px, var(--scan) 2px 3px);
     }
+    html[data-theme="light"] .crt-scan { display: none; }
     .crt-vig {
       background: radial-gradient(ellipse 120% 100% at 50% 50%, transparent 55%, var(--vig) 100%);
     }
@@ -126,13 +133,16 @@
       display: flex; align-items: center; gap: 24px;
     }
     .logo {
+      display: inline-flex; align-items: center; min-height: 44px;
       font-family: var(--display);
       font-weight: 800;
       font-size: 1.375rem; line-height: 1;
       color: var(--fg);
       text-shadow: var(--glow-sm);
     }
-    .logo span { animation: blink 1.06s steps(1) infinite; }
+    @media (hover: hover) and (pointer: fine) {
+      .logo:hover span { animation: blink 1.06s steps(1) infinite; }
+    }
     .nav-links { display: flex; gap: 4px; margin-right: auto; }
     .nav-links a {
       font-size: 0.8125rem;
@@ -147,10 +157,9 @@
     @media (hover: hover) and (pointer: fine) {
       .nav-links a:hover { color: var(--fg); background: var(--panel-h); }
     }
-    .nav-links { margin-right: auto; }
     .prog {
       position: absolute; left: 0; right: 0; bottom: -1px; height: 2px;
-      background: var(--signal); box-shadow: 0 0 8px var(--signal-glow);
+      background: var(--signal);
       transform: scaleX(0); transform-origin: 0 50%;
     }
     .tbtn {
@@ -159,7 +168,7 @@
       border-radius: 999px;
       border: 1px solid var(--line-h);
       color: var(--fg-2);
-      min-height: 32px;
+      min-height: 36px;
       transition: background-color 0.12s ease, color 0.12s ease, border-color 0.12s ease;
     }
     @media (hover: hover) and (pointer: fine) {
@@ -168,7 +177,6 @@
     .tbtn:active { background: var(--fg); color: var(--bg); }
     .tbtn.primary, .quick a.primary {
       background: var(--signal); color: var(--on-signal); border-color: var(--signal);
-      box-shadow: 0 0 18px -4px var(--signal-glow);
     }
     @media (hover: hover) and (pointer: fine) {
       .tbtn.primary:hover, .quick a.primary:hover { background: var(--fg); border-color: var(--fg); color: var(--bg); }
@@ -180,8 +188,8 @@
       position: fixed; inset: var(--nav-h) 0 0 0;
       z-index: 999;
       background: var(--bg);
-      padding: 32px 20px;
-      display: flex; flex-direction: column; gap: 6px;
+      padding: 32px 20px max(40px, env(safe-area-inset-bottom));
+      display: flex; flex-direction: column; justify-content: flex-end; gap: 6px;
       clip-path: inset(0 0 100% 0);
       visibility: hidden;
       transition: clip-path 0.24s var(--ease-out), visibility 0s linear 0.24s;
@@ -209,7 +217,7 @@
       margin-left: 0.08em;
       background: var(--fg);
       box-shadow: var(--glow);
-      animation: blink 1.06s steps(1) infinite;
+      animation: blink 1.06s steps(1) 1.6s 3;
     }
     @keyframes blink { 50% { opacity: 0; } }
 
@@ -258,7 +266,34 @@
     }
     .quick a:active { background: var(--fg); color: var(--bg); }
 
-    /* Perspective floor */
+    /* WebGL dot terrain (replaces the CSS floor when WebGL is available) */
+    .terrain {
+      position: fixed; inset: 0; width: 100%; height: 100%;
+      z-index: 0; pointer-events: none;
+      opacity: 0; transition: opacity 1.4s ease-out;
+    }
+    main, footer { position: relative; z-index: 1; }
+    .terrain.on { opacity: 1; }
+    .hero.gl .floor { display: none; }
+    .name { will-change: transform; }
+
+    /* Panel tilt + sheen (mouse only) */
+    .panel::before {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(159,216,234,0.09), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+    html[data-theme="light"] .panel::before {
+      background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(10,106,138,0.07), transparent 60%);
+    }
+    .panel.tilt::before { opacity: 1; }
+    .panel { transform-style: preserve-3d; }
+
+    /* Perspective floor (fallback) */
     .floor {
       position: absolute; left: -40%; right: -40%; bottom: 0;
       height: 44%;
@@ -282,15 +317,14 @@
     }
     .floor-grid {
       position: absolute; left: 0; right: 0; top: 0;
-      height: calc(300% + 56px);
+      height: calc(300% + 280px);
       background-image:
         linear-gradient(var(--grid) 1px, transparent 1px),
         linear-gradient(90deg, var(--grid) 1px, transparent 1px);
       background-size: 56px 56px;
-      animation: floor 2.4s linear infinite;
+      animation: floor 4.5s var(--ease-out) both;
     }
-    @keyframes floor { from { transform: translateY(-56px); } to { transform: translateY(0); } }
-    .hero.off .floor-grid { animation-play-state: paused; }
+    @keyframes floor { from { transform: translateY(-280px); } to { transform: translateY(0); } }
 
     /* Scroll-linked hero exit (progressive enhancement) */
     @supports (animation-timeline: scroll()) {
@@ -319,7 +353,7 @@
     @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } }
 
     /* ── Sections ───────────────────────────────────────────── */
-    .section { padding: 168px 0 40px; }
+    .section { padding: 128px 0 32px; }
     .sec-h {
       font-family: var(--display);
       font-weight: 800;
@@ -329,6 +363,7 @@
       text-shadow: var(--glow);
       margin-bottom: 48px;
     }
+    [data-rv]:focus { outline: none; }
     .sub-h {
       font-size: 0.875rem; font-weight: 500;
       color: var(--fg-3);
@@ -356,8 +391,8 @@
     .pp + .pp { margin-top: 14px; }
 
     /* About */
-    .bio .pbody { padding: 36px; }
-    .bio .pp { font-size: 1rem; }
+    .bio { position: relative; max-width: 64ch; }
+    .bio .pp { font-size: 1.125rem; line-height: 1.75; color: var(--fg-2); }
     .focus { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 
     /* Projects */
@@ -388,7 +423,7 @@
       font-size: 1.875rem; line-height: 1.1;
       color: var(--fg);
       text-shadow: var(--glow-sm);
-      margin: 40px 0 10px;
+      margin: 32px 0 10px;
     }
     .proj-link {
       align-self: flex-start;
@@ -401,8 +436,13 @@
     @media (hover: hover) and (pointer: fine) {
       .proj-link:hover { color: var(--fg); }
     }
+    @media (min-width: 901px) {
+      .track { display: grid; grid-template-columns: 1fr 1fr; overflow: visible; padding: 0; }
+      .proj { min-height: 240px; }
+      .ctrl { display: none !important; }
+    }
     .ctrl { display: flex; align-items: center; gap: 8px; margin-top: 16px; }
-    .ctrl .tbtn { min-width: 44px; min-height: 40px; }
+    .ctrl .tbtn { min-width: 44px; min-height: 44px; }
     .ctrl .tbtn:disabled { opacity: 0.35; pointer-events: none; }
     .counter { margin-left: 8px; font-size: 0.8125rem; color: var(--fg-3); font-variant-numeric: tabular-nums; }
 
@@ -427,7 +467,7 @@
     }
 
     /* Contact */
-    #contact { padding-bottom: 168px; }
+    #contact { padding-bottom: 128px; }
     .lead { max-width: 52ch; margin-bottom: 20px; }
     .email {
       display: inline-block;
@@ -446,7 +486,7 @@
     }
     .contact-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 40px; }
     .contact-actions .tbtn { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 20px; }
-    .copied { font-size: 0.8125rem; color: var(--signal); align-self: center; min-width: 8ch; }
+    .copied { flex-basis: 100%; font-size: 0.8125rem; color: var(--signal); min-height: 1.5em; }
 
     /* Footer */
     footer { border-top: 1px solid var(--line); padding: 22px 0; font-size: 0.75rem; color: var(--fg-3); }
@@ -455,11 +495,11 @@
     @media (hover: hover) and (pointer: fine) { .foot a:hover { color: var(--fg); } }
 
     /* ── Scroll reveals ─────────────────────────────────────── */
-    .js [data-rv]:not(.in) { visibility: hidden; }
+    .js [data-rv]:not(.in) { opacity: 0; }
 
-    .js .rv { clip-path: inset(-12px -12px 100% -12px); }
+    .js .rv { clip-path: inset(-24px -24px 100% -24px); }
     .js .rv.in {
-      clip-path: inset(-12px -12px -12px -12px);
+      clip-path: inset(-24px -24px -24px -24px);
       transition: clip-path 0.65s var(--ease-out) var(--d, 0ms);
     }
     .rv::after {
@@ -487,16 +527,33 @@
       .nav-in { padding: 0 16px; gap: 12px; }
       .nav-links { display: none; }
       .burger { display: inline-block; margin-left: auto; }
+      .nav .tbtn { min-height: 44px; }
+      body.menu-open { overflow: hidden; }
       .wrap { padding: 0 16px; }
       .hero { padding-bottom: 96px; }
       .floor { height: 30%; }
-      .section { padding-top: 112px; }
-      .pbody, .bio .pbody { padding: 22px; }
+      .hero { align-items: flex-end; padding-bottom: 34svh; }
+      .name { font-size: 15.5vw; margin-bottom: 24px; }
+      .hero-sub { margin-bottom: 24px; }
+      .section { padding-top: 96px; }
+      .pbody { padding: 22px; }
       .proj { flex-basis: 90%; min-height: 260px; }
       .log li { grid-template-columns: 1fr; gap: 6px; }
       .personal { grid-template-columns: 1fr; }
       .foot { flex-direction: column; text-align: center; gap: 6px; }
-      #contact { padding-bottom: 112px; }
+      #contact { padding-bottom: 96px; }
+    }
+
+    @media print {
+      .crt, .floor, .terrain, .nav, .mob, .ctrl, .contact-actions, .quick, .skip { display: none !important; }
+      .js .rv, .js [data-rv] { opacity: 1 !important; clip-path: none !important; }
+      .hero { min-height: 0; padding: 0 0 32px; }
+      .hero-wrap, .screen, .name, .hero-sub { animation: none !important; opacity: 1 !important; transform: none !important; }
+      .track { display: block; overflow: visible; }
+      .panel { break-inside: avoid; }
+      .proj { margin-bottom: 12px; min-height: 0; }
+      .section { padding-top: 48px; }
+      :root, html[data-theme] { --bg: #fff; --panel: #fff; --panel-h: #fff; --fg: #000; --fg-2: #222; --fg-3: #555; --line: #ccc; --signal: #0A6A8A; --on-signal: #fff; --glow: none; --glow-sm: none; }
     }
 
     /* ── Reduced motion: keep fades, drop movement ──────────── */
@@ -527,18 +584,20 @@
         <a href="#experience" aria-keyshortcuts="3">experience</a>
         <a href="#contact"    aria-keyshortcuts="4">contact</a>
       </nav>
-      <button class="tbtn" id="themeBtn" type="button" aria-label="Switch to light theme">light</button>
+      <button class="tbtn" id="themeBtn" type="button" aria-label="Switch to light theme">light mode</button>
       <button class="tbtn burger" id="burger" type="button" aria-expanded="false" aria-controls="mob">menu</button>
     </div>
     <div class="prog" id="prog" aria-hidden="true"></div>
   </header>
 
-  <div class="mob" id="mob" aria-label="Navigation">
+  <nav class="mob" id="mob" role="dialog" aria-modal="true" aria-label="Menu">
     <a href="#about">about</a>
     <a href="#projects">projects</a>
     <a href="#experience">experience</a>
     <a href="#contact">contact</a>
-  </div>
+  </nav>
+
+  <canvas class="terrain" id="terrain" aria-hidden="true"></canvas>
 
   <main>
     <!-- ── Hero ───────────────────────────────────────────── -->
@@ -553,9 +612,7 @@
           <p class="hero-sub">Computer science student at the University of Piraeus. I design websites, build software and study cybersecurity.</p>
           <nav class="quick" aria-label="Jump to section">
             <a href="#contact" class="primary">get in touch</a>
-            <a href="#about">about</a>
-            <a href="#projects">projects</a>
-            <a href="#experience">experience</a>
+            <a href="#projects">see projects</a>
           </nav>
         </div>
       </div>
@@ -566,20 +623,17 @@
       <div class="wrap">
         <h2 class="sec-h" data-rv data-scramble aria-label="About">About</h2>
 
-        <article class="panel bio rv">
-          <div class="pbody">
-            <p class="pp">
-              Studying Computer Science at the <strong>University of Piraeus</strong>,
-              engineered around systems thinking, algorithmic precision, and the architecture of high-performance software.
-              Six years of running high-pressure operational environments have built the strategic clarity
-              that most engineers take decades to develop.
-            </p>
-            <p class="pp">
-              The overlap between <strong>precision software engineering</strong>,
-              operational strategy, and high-end digital execution is exactly where I operate — and where I build.
-            </p>
-          </div>
-        </article>
+        <div class="bio rv">
+          <p class="pp">
+            I study Computer Science at the <strong>University of Piraeus</strong>, where I focus on
+            software development and cybersecurity.
+          </p>
+          <p class="pp">
+            Since 2019 I've also been the <strong>general manager of Folio Restaurant</strong>: I lead the team,
+            manage the budget and keep day-to-day operations running. That job taught me to plan carefully,
+            communicate clearly and stay calm when things get busy, and I bring the same habits to the software I build.
+          </p>
+        </div>
 
         <h3 class="sub-h rv" style="position:relative">What I work on</h3>
         <div class="focus">
@@ -611,7 +665,7 @@
         <h2 class="sec-h" data-rv data-scramble aria-label="Projects">Projects</h2>
 
         <!-- Replace href="#" and placeholder text with real project data -->
-        <div class="track" id="track" tabindex="0" aria-label="Projects, scroll horizontally">
+        <div class="track" id="track" role="region" tabindex="0" aria-label="Projects">
           <article class="panel proj rv">
             <div class="pbody">
               <span class="proj-tag">Web design</span>
@@ -660,14 +714,14 @@
 
         <ol class="log">
           <li class="rv">
-            <time>2019 – present</time>
+            <time datetime="2019">2019 – present</time>
             <div>
               <h3 class="ph">General Manager <span class="at">Folio Restaurant</span></h3>
               <p class="pp">Leading operational strategy and team development, managing budgets and staff coordination to drive business growth and optimise day-to-day performance.</p>
             </div>
           </li>
           <li class="rv">
-            <time>Aug – Sep 2025</time>
+            <time datetime="2025-08">Aug – Sep 2025</time>
             <div>
               <h3 class="ph">IT &amp; Cyber Security Intern <span class="at">Ayia Napa Marina</span></h3>
               <p class="pp">Hands-on exposure to enterprise networking, virtualisation, and software development tasks in a modern infrastructure environment.</p>
@@ -686,8 +740,7 @@
           </article>
           <article class="panel rv">
             <div class="pbody">
-              <div class="stat">Lens</div>
-              <h4 class="ph">Photography</h4>
+              <div class="stat">Photography</div>
               <p class="pp">Capturing moments with an eye for composition and precise framing.</p>
             </div>
           </article>
@@ -703,10 +756,10 @@
         <a href="mailto:fotiosmach11@gmail.com" class="email rv" style="position:relative">fotiosmach11@gmail.com</a>
         <div class="contact-actions">
           <button class="tbtn primary" id="copyBtn" type="button">copy email</button>
-          <a class="tbtn" href="https://github.com/fotios11" target="_blank" rel="noopener noreferrer">GitHub</a>
-          <a class="tbtn" href="https://www.linkedin.com/in/fotios-machattos/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-          <a class="tbtn" href="https://www.facebook.com/fotios.machattos/" target="_blank" rel="noopener noreferrer">Facebook</a>
-          <a class="tbtn" href="https://www.instagram.com/fmachattos11/" target="_blank" rel="noopener noreferrer">Instagram</a>
+          <a class="tbtn" href="https://github.com/fotios11" target="_blank" rel="noopener noreferrer">GitHub<span class="sr-only"> (opens in new tab)</span></a>
+          <a class="tbtn" href="https://www.linkedin.com/in/fotios-machattos/" target="_blank" rel="noopener noreferrer">LinkedIn<span class="sr-only"> (opens in new tab)</span></a>
+          <a class="tbtn" href="https://www.facebook.com/fotios.machattos/" target="_blank" rel="noopener noreferrer">Facebook<span class="sr-only"> (opens in new tab)</span></a>
+          <a class="tbtn" href="https://www.instagram.com/fmachattos11/" target="_blank" rel="noopener noreferrer">Instagram<span class="sr-only"> (opens in new tab)</span></a>
           <span class="copied" id="copied" aria-live="polite"></span>
         </div>
       </div>
@@ -773,7 +826,7 @@
     const metaTheme = document.querySelector('meta[name="theme-color"]');
     function syncTheme() {
       const dark = html.getAttribute('data-theme') !== 'light';
-      themeBtn.textContent = dark ? 'light' : 'dark';
+      themeBtn.textContent = dark ? 'light mode' : 'dark mode';
       themeBtn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
       metaTheme.setAttribute('content', dark ? '#000000' : '#F3F4F5');
     }
@@ -788,8 +841,11 @@
     /* ── Mobile menu ──────────────────────────────────────── */
     const burger = document.getElementById('burger');
     const mob = document.getElementById('mob');
+    const outside = [document.querySelector('main'), document.querySelector('footer')];
     function setMenu(open) {
       mob.classList.toggle('open', open);
+      document.body.classList.toggle('menu-open', open);
+      outside.forEach(el => { el.inert = open; });
       burger.setAttribute('aria-expanded', String(open));
       burger.textContent = open ? 'close' : 'menu';
       if (open) mob.querySelector('a').focus();
@@ -804,11 +860,14 @@
     const order = ['about', 'projects', 'experience', 'contact'];
     addEventListener('keydown', e => {
       if (e.metaKey || e.ctrlKey || e.altKey || e.repeat) return;
-      if (/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) return;
+      const a = document.activeElement;
+      if (/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) || a.isContentEditable) return;
       const i = '1234'.indexOf(e.key);
       if (i < 0) return;
       const target = document.getElementById(order[i]);
       target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+      const h = target.querySelector('h2');
+      h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true });
       history.replaceState(null, '', '#' + order[i]);
     });
 
@@ -833,10 +892,6 @@
       });
     }, { rootMargin: '-45% 0px -50% 0px' });
     document.querySelectorAll('main section[id]').forEach(s => secIO.observe(s));
-
-    /* ── Pause hero grid when off screen ──────────────────── */
-    const hero = document.getElementById('top');
-    new IntersectionObserver(([en]) => hero.classList.toggle('off', !en.isIntersecting)).observe(hero);
 
     /* ── Scroll reveals: heading scrambles, panels scan in ─ */
     const STAGGER = 70, CHAR = 360;  /* panels start while the heading resolves */
@@ -874,7 +929,10 @@
       const cards = Array.from(track.children);
       let cur = 0;
       function sync() {
-        counter.textContent = (cur + 1) + ' of ' + cards.length;
+        const right = track.scrollLeft + track.clientWidth + 4;
+        let last = cur;
+        while (last + 1 < cards.length && cards[last + 1].offsetLeft - track.offsetLeft + cards[last + 1].offsetWidth <= right) last++;
+        counter.textContent = (last > cur ? (cur + 1) + '–' + (last + 1) : (cur + 1)) + ' of ' + cards.length;
         prev.disabled = cur === 0;
         next.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
       }
@@ -897,6 +955,281 @@
       addEventListener('resize', sync, { passive: true });
       sync();
     })();
+
+    /* ── 3D stage: one dot field that the page scrolls through ─
+       hero → about → projects → experience → contact
+       terrain → low glide → bird's-eye → tunnel → globe       */
+    (function () {
+      const hero = document.getElementById('top');
+      const canvas = document.getElementById('terrain');
+      const name = document.querySelector('.name');
+      const gl = canvas.getContext('webgl', { antialias: false, alpha: true, premultipliedAlpha: false });
+      if (!gl) return;                                   // keep the CSS floor
+      hero.classList.add('gl');
+
+      const VS = `
+        attribute vec2 aGrid;
+        uniform float uTime; uniform vec2 uBump; uniform float uBumpAmp; uniform float uAmp;
+        uniform float uTun; uniform float uSph; uniform vec3 uSphC; uniform float uSphR;
+        uniform mat4 uProj; uniform mat4 uView; uniform float uPx;
+        varying float vFog; varying float vH;
+        float ease(float t) { return t * t * (3.0 - 2.0 * t); }
+        void main() {
+          float x = aGrid.x, z = aGrid.y;
+          float h = sin(x * 0.3 + uTime * 0.5) * 0.45
+                  + sin(z * 0.42 - uTime * 0.65) * 0.32
+                  + sin((x + z) * 0.18 + uTime * 0.3) * 0.4;
+          float rnd = fract(sin(dot(aGrid, vec2(12.9898, 78.233))) * 43758.5453);
+
+          /* terrain */
+          vec2 d = vec2(x, z) - uBump;
+          float bump = uBumpAmp * exp(-dot(d, d) * 0.045);
+          vec3 T = vec3(x, h * uAmp + bump, z);
+
+          /* tunnel: the field curls around the z axis */
+          float ang = x / 26.0 * 3.14159 + uTime * 0.04;
+          float r = 4.6 + h * 0.3;
+          vec3 P = vec3(sin(ang) * r, cos(ang) * r, z);
+
+          /* globe */
+          float u = (x + 26.0) / 52.0, v = (4.0 - z) / 50.0;
+          float th = u * 6.28318 + uTime * 0.12, ph = v * 3.14159;
+          vec3 S = uSphC + uSphR * (1.0 + h * 0.025) * vec3(sin(ph) * cos(th), cos(ph), sin(ph) * sin(th));
+
+          /* staggered morph: each dot leaves at a slightly different moment */
+          float bt = ease(clamp(uTun * 1.5 - rnd * 0.5, 0.0, 1.0));
+          float bs = ease(clamp(uSph * 1.5 - rnd * 0.5, 0.0, 1.0));
+          vec3 pos = mix(mix(T, P, bt), S, bs);
+
+          vec4 mv = uView * vec4(pos, 1.0);
+          gl_Position = uProj * mv;
+          float depth = -mv.z;
+          gl_PointSize = clamp(uPx * 24.0 / depth, 1.2, 4.0 * uPx);
+          vFog = clamp(1.0 - (depth - 4.0) / 46.0, 0.0, 1.0);
+          vH = h;
+        }`;
+      const FS = `
+        precision mediump float;
+        uniform vec3 uNear; uniform vec3 uFar;
+        uniform float uAlpha; uniform float uTop; uniform vec2 uRes;
+        varying float vFog; varying float vH;
+        void main() {
+          vec2 c = gl_PointCoord - 0.5;
+          float r = dot(c, c);
+          if (r > 0.25) discard;
+          float a = smoothstep(0.25, 0.06, r);
+          vec3 col = mix(uFar, uNear, clamp(vH * 0.45 + 0.35, 0.0, 1.0));
+          /* hero: keep the top of the screen clear behind the name */
+          float sy = gl_FragCoord.y / uRes.y;
+          float top = mix(1.0, smoothstep(0.82, 0.48, sy), uTop);
+          gl_FragColor = vec4(col, a * vFog * vFog * uAlpha * top);
+        }`;
+      function sh(type, src) { const o = gl.createShader(type); gl.shaderSource(o, src); gl.compileShader(o); return o; }
+      const prog = gl.createProgram();
+      gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS));
+      gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS));
+      gl.linkProgram(prog);
+      if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { hero.classList.remove('gl'); return; }
+      gl.useProgram(prog);
+
+      /* Grid of points (a bit sparser on small screens) */
+      const step = innerWidth < 720 ? 0.36 : 0.3;
+      const pts = [];
+      for (let z = 4; z > -46; z -= step) for (let x = -26; x <= 26; x += step) pts.push(x, z);
+      const count = pts.length / 2;
+      gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(pts), gl.STATIC_DRAW);
+      const aGrid = gl.getAttribLocation(prog, 'aGrid');
+      gl.enableVertexAttribArray(aGrid);
+      gl.vertexAttribPointer(aGrid, 2, gl.FLOAT, false, 0, 0);
+      const U = {};
+      ['uTime','uBump','uBumpAmp','uAmp','uTun','uSph','uSphC','uSphR','uProj','uView','uPx',
+       'uNear','uFar','uAlpha','uTop','uRes'].forEach(n => U[n] = gl.getUniformLocation(prog, n));
+      gl.enable(gl.BLEND);
+
+      /* Colours follow the theme tokens */
+      function hex(v) { v = v.trim().replace('#', ''); return [0, 2, 4].map(i => parseInt(v.slice(i, i + 2), 16) / 255); }
+      function setColours() {
+        const cs = getComputedStyle(document.documentElement);
+        const light = document.documentElement.getAttribute('data-theme') === 'light';
+        gl.uniform3fv(U.uNear, hex(cs.getPropertyValue('--fg')));
+        gl.uniform3fv(U.uFar, hex(cs.getPropertyValue('--signal')));
+        if (light) gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        else gl.blendFunc(gl.SRC_ALPHA, gl.ONE);           // additive glow on black
+        requestDraw();
+      }
+      new MutationObserver(setColours).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+      /* Matrix helpers */
+      function perspective(fovy, aspect, near, far) {
+        const f = 1 / Math.tan(fovy / 2), nf = 1 / (near - far);
+        return [f / aspect, 0, 0, 0, 0, f, 0, 0, 0, 0, (far + near) * nf, -1, 0, 0, 2 * far * near * nf, 0];
+      }
+      const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+      const norm = a => { const l = Math.hypot(a[0], a[1], a[2]); return [a[0] / l, a[1] / l, a[2] / l]; };
+      const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+      const dot3 = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+      function lookAt(eye, target) {
+        const f = norm(sub(target, eye)), r = norm(cross(f, [0, 1, 0])), u = cross(r, f);
+        return { m: [r[0], u[0], -f[0], 0, r[1], u[1], -f[1], 0, r[2], u[2], -f[2], 0,
+                     -dot3(r, eye), -dot3(u, eye), dot3(f, eye), 1], f, r, u };
+      }
+      const lerp = (a, b, t) => a + (b - a) * t;
+      const lerp3 = (a, b, t) => [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
+
+      /* Chapters: one camera + shape state per section */
+      const sections = ['top', 'about', 'projects', 'experience', 'contact'].map(id => document.getElementById(id));
+      function chapters(portrait) {
+        return [
+          { eye: [0, 3.4, 10],  tgt: [0, -0.6, -20], amp: 1,   tun: 0, sph: 0, alpha: 1,    top: 1 }, // hero: the field
+          { eye: [-4, 2.2, -2], tgt: [6, -1.6, -26], amp: 0.6, tun: 0, sph: 0, alpha: 0.85, top: 0 }, // about: low glide
+          { eye: [0, 9, -6],    tgt: [0, -1, -17],   amp: 1.4, tun: 0, sph: 0, alpha: 0.9,  top: 0 }, // projects: bird's-eye
+          { eye: [0, 0, 3],     tgt: [0, 0, -30],    amp: 0.7, tun: 1, sph: 0, alpha: 0.8,  top: 0 }, // experience: tunnel
+          { eye: [0, 0, 8],     tgt: [0, 0, -12],    amp: 0.4, tun: 0, sph: 1, alpha: portrait ? 0.5 : 0.85, top: 0 } // contact: globe
+        ];
+      }
+      let anchors = [];
+      function measure() {
+        const max = document.documentElement.scrollHeight - innerHeight;
+        anchors = sections.map((el, i) => i === 0 ? 0 : Math.min(max, el.offsetTop - innerHeight * 0.35));
+      }
+      function stageAt(y, portrait) {
+        const C = chapters(portrait);
+        let i = 0;
+        while (i < anchors.length - 2 && y >= anchors[i + 1]) i++;
+        const span = Math.max(1, anchors[i + 1] - anchors[i]);
+        let f = Math.min(1, Math.max(0, (y - anchors[i]) / span));
+        f = f * f * (3 - 2 * f);
+        const a = C[i], b = C[i + 1], o = {};
+        for (const k of ['amp', 'tun', 'sph', 'alpha', 'top']) o[k] = lerp(a[k], b[k], f);
+        o.eye = lerp3(a.eye, b.eye, f); o.tgt = lerp3(a.tgt, b.tgt, f);
+        /* inside the tunnel the camera keeps travelling forward */
+        o.eye[2] -= o.tun * 6 * f * (i === 3 ? 1 : 0);
+        return o;
+      }
+
+      /* Input */
+      const FOV = 55 * Math.PI / 180;
+      let W = 1, H = 1, px = 1;
+      let tx = 0, ty = 0, cx = 0, cy = 0, lastMove = -1e9;
+      let bump = [0, -8], bumpT = [0, -8];
+      let st = null;                                       // smoothed stage state
+      function resize() {
+        px = Math.min(devicePixelRatio || 1, 1.75);
+        W = canvas.clientWidth; H = canvas.clientHeight;
+        canvas.width = Math.round(W * px); canvas.height = Math.round(H * px);
+        gl.viewport(0, 0, canvas.width, canvas.height);
+        gl.uniform1f(U.uPx, px);
+        gl.uniform2f(U.uRes, canvas.width, canvas.height);
+        measure();
+        requestDraw();
+      }
+      addEventListener('resize', resize, { passive: true });
+      addEventListener('load', measure);
+      if (!reduce && matchMedia('(pointer: fine)').matches) {
+        addEventListener('pointermove', e => {
+          tx = e.clientX / innerWidth * 2 - 1;
+          ty = e.clientY / innerHeight * 2 - 1;
+          lastMove = performance.now();
+        }, { passive: true });
+      }
+
+      const t0 = performance.now();
+      function draw(now = performance.now()) {
+        const t = reduce ? 0 : (now - t0) / 1000;
+        const portrait = W / H < 1;
+        /* Reduced motion: only the hero field, no scroll-driven travel */
+        const goal = stageAt(reduce ? 0 : scrollY, portrait);
+        if (reduce) goal.alpha *= Math.max(0, 1 - scrollY / (hero.offsetHeight || innerHeight));
+        if (!st || reduce) st = goal;
+        else {
+          const k = 0.09;                                  // camera inertia
+          for (const key of ['amp', 'tun', 'sph', 'alpha', 'top']) st[key] = lerp(st[key], goal[key], k);
+          st.eye = lerp3(st.eye, goal.eye, k); st.tgt = lerp3(st.tgt, goal.tgt, k);
+        }
+        cx += (tx - cx) * 0.05; cy += (ty - cy) * 0.05;
+
+        const eye = [st.eye[0] + cx * 1.6, st.eye[1] - cy * 0.5, st.eye[2]];
+        const cam = lookAt(eye, [st.tgt[0] + cx * 0.6, st.tgt[1], st.tgt[2]]);
+        gl.uniformMatrix4fv(U.uProj, false, perspective(FOV, W / H, 0.1, 100));
+        gl.uniformMatrix4fv(U.uView, false, cam.m);
+
+        /* Bump under the cursor (ray → ground) or wandering on its own */
+        if (now - lastMove < 2500 && eye[1] > 0.3) {
+          const th = Math.tan(FOV / 2), aspect = W / H;
+          const d = [0, 1, 2].map(i => cam.f[i] + cam.r[i] * tx * th * aspect - cam.u[i] * ty * th);
+          if (d[1] < -0.02) { const k = -eye[1] / d[1]; bumpT = [eye[0] + d[0] * k, eye[2] + d[2] * k]; }
+        } else {
+          bumpT = [Math.sin(t * 0.23) * 9, -10 + Math.cos(t * 0.17) * 6];
+        }
+        bump[0] += (bumpT[0] - bump[0]) * 0.06; bump[1] += (bumpT[1] - bump[1]) * 0.06;
+
+        gl.uniform2fv(U.uBump, bump);
+        gl.uniform1f(U.uBumpAmp, reduce ? 0 : 1.3 * (1 - st.tun) * (1 - st.sph));
+        gl.uniform1f(U.uTime, t);
+        gl.uniform1f(U.uAmp, st.amp);
+        gl.uniform1f(U.uTun, st.tun);
+        gl.uniform1f(U.uSph, st.sph);
+        gl.uniform3fv(U.uSphC, portrait ? [0, 2.4, -12] : [5.6, 0.3, -10]);
+        gl.uniform1f(U.uSphR, portrait ? 3.4 : 4.3);
+        gl.uniform1f(U.uAlpha, st.alpha);
+        gl.uniform1f(U.uTop, st.top);
+
+        gl.clearColor(0, 0, 0, 0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.drawArrays(gl.POINTS, 0, count);
+
+        if (!reduce && !html.classList.contains('boot'))
+          name.style.transform = `translate3d(${(-cx * 10).toFixed(2)}px, ${(-cy * 6).toFixed(2)}px, 0)`;
+      }
+
+      /* Loop while the page is visible; reduced motion draws only on demand */
+      let running = false, pending = false;
+      function requestDraw() {
+        if (running || pending) return;
+        pending = true;
+        requestAnimationFrame(now => { pending = false; draw(now); });
+      }
+      function loop(now) { if (!running) return; draw(now); requestAnimationFrame(loop); }
+      function setRunning() {
+        const want = !document.hidden && !reduce;
+        if (want && !running) { running = true; requestAnimationFrame(loop); }
+        else if (!want) running = false;
+      }
+      document.addEventListener('visibilitychange', setRunning);
+      if (reduce) addEventListener('scroll', requestDraw, { passive: true });
+
+      resize(); setColours(); draw();
+      setRunning();
+      requestAnimationFrame(() => canvas.classList.add('on'));
+    })();
+
+    /* ── Panel tilt toward the cursor (mouse only) ───────── */
+    if (!reduce && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      document.querySelectorAll('.panel').forEach(el => {
+        let raf = 0;
+        el.addEventListener('pointermove', e => {
+          cancelAnimationFrame(raf);
+          raf = requestAnimationFrame(() => {
+            const r = el.getBoundingClientRect();
+            const nx = (e.clientX - r.left) / r.width, ny = (e.clientY - r.top) / r.height;
+            el.style.setProperty('--mx', (nx * 100).toFixed(1) + '%');
+            el.style.setProperty('--my', (ny * 100).toFixed(1) + '%');
+            el.style.transform = `perspective(900px) rotateX(${((0.5 - ny) * 4).toFixed(2)}deg) rotateY(${((nx - 0.5) * 5).toFixed(2)}deg)`;
+          });
+        });
+        el.addEventListener('pointerenter', () => {
+          el.classList.add('tilt');
+          el.style.transition = 'transform 0.12s ease-out, border-color 0.15s ease, background-color 0.15s ease';
+        });
+        el.addEventListener('pointerleave', () => {
+          cancelAnimationFrame(raf);
+          el.classList.remove('tilt');
+          el.style.transition = 'transform 0.5s var(--ease-out), border-color 0.15s ease, background-color 0.15s ease';
+          el.style.transform = '';
+        });
+      });
+    }
 
     /* ── Copy email ───────────────────────────────────────── */
     const copyBtn = document.getElementById('copyBtn');
