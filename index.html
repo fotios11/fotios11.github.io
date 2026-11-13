@@ -172,10 +172,11 @@
     /* phosphor glow with a hair of colour fringe on display type */
     h1, h2, .item h3, .brand {
       text-shadow: -0.6px 0 rgba(255,90,90,0.35), 0.6px 0 rgba(90,200,255,0.4), 0 0 14px rgba(159,216,234,0.22); }
-    /* the name: two fixed lines, with a cursor that blinks a few times */
+    /* the name: two fixed lines, with a thin terminal cursor blinking after it */
     .name .ln { display: block; white-space: nowrap; }
-    .cursor { display: inline-block; width: 0.5em; height: 0.72em; margin-left: 0.12em; background: var(--fg);
-      animation: blink 1.06s steps(1) 1.4s 4 both; }
+    .cursor { display: inline-block; width: max(3px, 0.06em); height: 0.78em; margin-left: 0.1em; background: var(--fg);
+      vertical-align: -0.02em; box-shadow: 0 0 10px rgba(159,216,234,0.45);
+      animation: blink 1.06s steps(1) infinite; }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
     @media (prefers-reduced-motion: reduce) {
