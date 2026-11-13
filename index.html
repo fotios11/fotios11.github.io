@@ -157,7 +157,12 @@
       .cta { margin-top: 22px; }
       .list { gap: 16px; margin-top: 18px; }
       .item { padding-top: 14px; }
-      .copy::before { inset: -10% -8% -10% -8%; background: radial-gradient(closest-side, rgba(0,0,0,0.45), transparent); }
+      /* phones: no dark shapes behind the text; each letter gets a tight dark halo instead,
+         so the dots stay visible right up to the words */
+      .copy::before { display: none; }
+      .copy p, .copy .meta, .copy .email, .copy .links a, .item h3 {
+        text-shadow: 0 0 2px #000, 0 0 5px #000, 0 0 10px rgba(0,0,0,0.85); }
+      h1, h2 { text-shadow: 0 0 2px #000, 0 0 8px #000, -0.6px 0 rgba(255,90,90,0.35), 0.6px 0 rgba(90,200,255,0.4); }
       .crt { background:
         repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0 2px, rgba(0,0,0,0.09) 2px 3px),
         radial-gradient(ellipse 140% 100% at 50% 50%, transparent 70%, rgba(0,0,0,0.3) 100%); }
@@ -442,7 +447,7 @@
       /* Grid of points (a bit sparser on small screens) */
       const step = innerWidth < 720 ? 0.36 : 0.3;
       const pts = [];
-      for (let z = 4; z > -46; z -= step) for (let x = -26; x <= 26; x += step) pts.push(x, z);
+      for (let z = 14; z > -46; z -= step) for (let x = -26; x <= 26; x += step) pts.push(x, z);
       const count = pts.length / 2;
       gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(pts), gl.STATIC_DRAW);
@@ -608,7 +613,7 @@
         }
         while (rects.length < 2) rects.push([-9, -9, -9, -9]);
         gl.uniform4fv(U.uCalmA, rects[0]); gl.uniform4fv(U.uCalmB, rects[1]);
-        gl.uniform1f(U.uCalm, portrait ? 0.82 : 0.55);
+        gl.uniform1f(U.uCalm, portrait ? 0.35 : 0.55);
 
         gl.clearColor(0, 0, 0, 0);
         gl.clear(gl.COLOR_BUFFER_BIT);
