@@ -147,8 +147,20 @@
       .corner { width: 16px; height: 16px; }
       .corner.tl, .corner.bl { left: 10px; } .corner.tr, .corner.br { right: 10px; }
       .corner.tl, .corner.tr { top: 10px; } .corner.bl, .corner.br { bottom: 10px; }
-      .rail { bottom: 28px; }
-      section { align-items: flex-end; padding: 96px 0 84px; }
+      .rail { display: none; }                                   /* the menu does this job on phones */
+      .nav { background: linear-gradient(to bottom, #000 0%, #000 62%, rgba(0,0,0,0) 100%); padding-bottom: 14px; }
+      body { font-size: 0.875rem; line-height: 1.65; }
+      section { display: block; min-height: 0; padding: 46svh 0 72px; }   /* a window of dots, then the text */
+      #top { display: flex; align-items: flex-end; min-height: 100svh; padding: 96px 0 64px; }
+      .name { font-size: 2.15rem; margin-bottom: 18px; }
+      h2 { font-size: 1.35rem; margin-bottom: 14px; }
+      .cta { margin-top: 22px; }
+      .list { gap: 16px; margin-top: 18px; }
+      .item { padding-top: 14px; }
+      .copy::before { inset: -10% -8% -10% -8%; background: radial-gradient(closest-side, rgba(0,0,0,0.5), transparent); }
+      .crt { background:
+        repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0 2px, rgba(0,0,0,0.09) 2px 3px),
+        radial-gradient(ellipse 140% 100% at 50% 50%, transparent 70%, rgba(0,0,0,0.3) 100%); }
     }
 
     /* ── CRT touches ────────────────────────────────────────── */
@@ -280,6 +292,25 @@
     }
     burger.addEventListener('click', () => setMenu(!mob.classList.contains('open')));
     mob.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+
+    /* In-page links: scroll so the section's text sits fully on screen,
+       not just the top of the section */
+    document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (!target) return;
+      e.preventDefault();
+      const copy = target.querySelector('.copy') || target;
+      requestAnimationFrame(() => {                             // after the menu has closed
+        const r = copy.getBoundingClientRect(), navH = 84, room = innerHeight - navH;
+        const y = r.height < room - 48
+          ? scrollY + r.top - navH - (room - r.height) * 0.6       // text a little below centre, scene above
+          : scrollY + r.top - navH - 16;
+        const fullScreen = target.offsetHeight <= innerHeight + 2;   // desktop: one section = one screen
+        const top = target.id === 'top' ? 0 : fullScreen ? target.offsetTop : Math.max(0, y);
+        scrollTo({ top, behavior: reduce ? 'auto' : 'smooth' });
+        history.replaceState(null, '', a.getAttribute('href'));
+      });
+    }));
     addEventListener('keydown', e => { if (e.key === 'Escape' && mob.classList.contains('open')) { setMenu(false); burger.focus(); } });
     document.addEventListener('touchstart', () => {}, { passive: true });
 
@@ -454,14 +485,21 @@
           { eye: [0, 3.4, 10],  tgt: [0, -0.6, -20], amp: 1,   tun: 0, sph: 0, alpha: 1,    top: 1 }, // hero: the field
           { eye: [-4, 2.2, -2], tgt: [6, -1.6, -26], amp: 0.6, tun: 0, sph: 0, alpha: 0.85, top: 0 }, // about: low glide
           { eye: [0, 9, -6],    tgt: [0, -1, -17],   amp: 1.4, tun: 0, sph: 0, alpha: 0.9,  top: 0 }, // projects: bird's-eye
-          { eye: [0, 0, 3],     tgt: [0, 0, -30],    amp: 0.7, tun: 1, sph: 0, alpha: 0.38, top: 0 }, // experience: tunnel (dimmed so text stays readable)
+          { eye: [0, 0, 3],     tgt: [0, 0, -30],    amp: 0.7, tun: 1, sph: 0, alpha: portrait ? 0.85 : 0.38, top: 0 }, // experience: tunnel (dimmed on desktop, where text sits over it)
           { eye: [0, 0, 8],     tgt: [0, 0, -12],    amp: 0.4, tun: 0, sph: 1, alpha: portrait ? 0.5 : 0.85, top: 0 } // contact: globe
         ];
       }
       let anchors = [];
       function measure() {
         const max = document.documentElement.scrollHeight - innerHeight;
-        anchors = sections.map((el, i) => i === 0 ? 0 : Math.min(max, el.offsetTop - innerHeight * 0.35));
+        const phone = innerWidth < 760;
+        anchors = sections.map((el, i) => {
+          if (i === 0) return 0;
+          /* phones: each chapter is fully formed when its text is on screen (text sits below a window of dots) */
+          const c = el.querySelector('.copy');
+          const y = phone && c ? c.getBoundingClientRect().top + scrollY - innerHeight * 0.38 : el.offsetTop - innerHeight * 0.35;
+          return Math.min(max, y);
+        });
       }
       function stageAt(y, portrait) {
         const C = chapters(portrait);
@@ -489,7 +527,7 @@
         W = canvas.clientWidth; H = canvas.clientHeight;
         canvas.width = Math.round(W * px); canvas.height = Math.round(H * px);
         gl.viewport(0, 0, canvas.width, canvas.height);
-        gl.uniform1f(U.uPx, px);
+        gl.uniform1f(U.uPx, px * (W < 760 ? 1.45 : 1));
         gl.uniform2f(U.uRes, canvas.width, canvas.height);
         measure();
         requestDraw();
@@ -520,7 +558,9 @@
         cx += (tx - cx) * 0.05; cy += (ty - cy) * 0.05;
 
         const eye = [st.eye[0] + cx * 1.6, st.eye[1] - cy * 0.5, st.eye[2]];
-        const cam = lookAt(eye, [st.tgt[0] + cx * 0.6, st.tgt[1], st.tgt[2]]);
+        /* phones: tilt the camera down so the field fills the tall, narrow screen (not on the globe) */
+        const tilt = portrait ? 5.5 * (1 - st.sph) * (1 - st.tun) : 0;
+        const cam = lookAt(eye, [st.tgt[0] + cx * 0.6, st.tgt[1] - tilt, st.tgt[2]]);
         gl.uniformMatrix4fv(U.uProj, false, perspective(FOV, W / H, 0.1, 100));
         gl.uniformMatrix4fv(U.uView, false, cam.m);
 
