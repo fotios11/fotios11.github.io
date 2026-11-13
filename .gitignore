@@ -1,0 +1,4 @@
+# Local tooling (Claude Code skills, design critiques) — not part of the site
+.claude/
+.impeccable/
+skills-lock.json
