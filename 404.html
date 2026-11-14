@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#000000">
+  <title>Page not found · Fotios Machattos</title>
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <style>
+    @font-face { font-family: 'JetBrains Mono'; font-weight: 100 800; font-display: swap; src: url(/assets/fonts/jetbrains-mono-latin.woff2) format('woff2'); }
+    @font-face { font-family: 'Michroma'; font-weight: 400; font-display: swap; src: url(/assets/fonts/michroma-latin.woff2) format('woff2'); }
+    :root { --fg: #F2F4F5; --fg-2: #B6BDC2; --fg-3: #858D93; --signal: #9FD8EA; --line: rgba(159,216,234,0.28); }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      min-height: 100svh; display: grid; place-items: center; padding: 32px 22px;
+      background: #000; color: var(--fg-2);
+      font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.9375rem; line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      background-image: radial-gradient(rgba(159,216,234,0.14) 1px, transparent 1.2px);
+      background-size: 22px 22px; background-position: center;
+    }
+    body::after { content: ''; position: fixed; inset: 0; pointer-events: none;
+      background: radial-gradient(ellipse at center, transparent 30%, #000 78%); }
+    main { position: relative; z-index: 1; max-width: 34rem; text-align: center; }
+    .mark { width: 72px; height: 40px; display: block; margin: 0 auto 40px; color: var(--fg); }
+    .code { font-family: 'Michroma', ui-sans-serif, system-ui, sans-serif; color: var(--signal); font-size: 0.75rem; letter-spacing: 0.3em; margin-bottom: 16px; }
+    h1 { font-family: 'Michroma', ui-sans-serif, system-ui, sans-serif; font-weight: 400; color: var(--fg);
+      font-size: clamp(1.5rem, 5vw, 2.25rem); line-height: 1.25; margin-bottom: 16px;
+      text-shadow: 0 0 18px rgba(159,216,234,0.35); }
+    p { margin-bottom: 36px; }
+    a.home { display: inline-flex; align-items: center; min-height: 44px; padding: 0 22px; border-radius: 999px;
+      background: var(--fg); color: #000; text-decoration: none; font-weight: 500; font-size: 0.875rem;
+      transition: background-color 0.2s ease; }
+    a.home:hover { background: var(--signal); }
+    a.home:focus-visible { outline: 2px solid var(--signal); outline-offset: 4px; }
+  </style>
+</head>
+<body>
+  <main>
+    <svg class="mark" viewBox="0 0 359 200" aria-hidden="true"><g fill="currentColor"><rect width="205" height="29"/><path d="M0 67H131V95H28V200H0Z"/><path d="M155 57L229.5 130.5L358.5 2V200H330V73L229.5 173L155 97Z"/></g><rect x="52" y="171" width="29" height="29" fill="#9FD8EA"/></svg>
+    <p class="code">404</p>
+    <h1>This page doesn't exist.</h1>
+    <p>The link may be mistyped or out of date.</p>
+    <a class="home" href="/">Back to the homepage</a>
+  </main>
+</body>
+</html>

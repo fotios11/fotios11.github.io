@@ -6,11 +6,41 @@
   <meta name="description" content="Fotios Machattos — computer science student at the University of Piraeus, building websites and software.">
   <meta name="theme-color" content="#000000">
   <title>Fotios Machattos</title>
+  <link rel="canonical" href="https://fotios11.github.io/">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+  <!-- Link previews (Instagram, LinkedIn, WhatsApp, Messenger, X) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Fotios Machattos">
+  <meta property="og:title" content="Fotios Machattos">
+  <meta property="og:description" content="Computer science student at the University of Piraeus, building websites and software.">
+  <meta property="og:url" content="https://fotios11.github.io/">
+  <meta property="og:image" content="https://fotios11.github.io/assets/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="FM logo with the name Fotios Machattos on black">
+  <meta name="twitter:card" content="summary_large_image">
+
   <script>document.documentElement.classList.add('js');</script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Michroma&display=swap" rel="stylesheet">
+  <link rel="preload" href="/assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/michroma-latin.woff2" as="font" type="font/woff2" crossorigin>
   <style>
+    /* ── Fonts (self-hosted, SIL OFL 1.1, see assets/fonts) ── */
+    @font-face { font-family: 'JetBrains Mono'; font-style: normal; font-weight: 100 800; font-display: swap;
+      src: url(/assets/fonts/jetbrains-mono-latin-ext.woff2) format('woff2');
+      unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+    @font-face { font-family: 'JetBrains Mono'; font-style: normal; font-weight: 100 800; font-display: swap;
+      src: url(/assets/fonts/jetbrains-mono-latin.woff2) format('woff2');
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+    @font-face { font-family: 'Michroma'; font-style: normal; font-weight: 400; font-display: swap;
+      src: url(/assets/fonts/michroma-latin-ext.woff2) format('woff2');
+      unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+    @font-face { font-family: 'Michroma'; font-style: normal; font-weight: 400; font-display: swap;
+      src: url(/assets/fonts/michroma-latin.woff2) format('woff2');
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
     /* ── Tokens ─────────────────────────────────────────────── */
     :root {
       --fg:     #F2F4F5;
@@ -68,6 +98,7 @@
     /* ── Nav ────────────────────────────────────────────────── */
     .nav { position: fixed; z-index: 10; left: 0; right: 0; top: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.85), rgba(0,0,0,0)); }
     .nav-in { max-width: 1200px; margin: 0 auto; padding: 0 var(--gutter); height: 84px; display: flex; align-items: center; gap: 24px; }
+    .brand .mark { width: 25px; height: 14px; margin-right: 12px; flex: none; }
     .brand { margin-right: auto; display: inline-flex; align-items: center; min-height: 44px; font-family: var(--display); font-size: 0.75rem; letter-spacing: 0.08em; color: var(--fg); }
     .nav-links { display: flex; gap: 22px; font-size: 0.8125rem; }
     .nav-links a { display: inline-flex; align-items: center; min-height: 44px; color: var(--fg-3); transition: color 0.15s ease; }
@@ -204,7 +235,7 @@
 
   <header class="nav">
     <div class="nav-in">
-      <a class="brand" href="#top">Fotios Machattos</a>
+      <a class="brand" href="#top"><svg class="mark" viewBox="0 0 359 200" aria-hidden="true"><g fill="currentColor"><rect width="205" height="29"/><path d="M0 67H131V95H28V200H0Z"/><path d="M155 57L229.5 130.5L358.5 2V200H330V73L229.5 173L155 97Z"/></g><rect x="52" y="171" width="29" height="29" fill="var(--signal)"/></svg>Fotios Machattos</a>
       <nav class="nav-links" aria-label="Main">
         <a href="#about">About</a><a href="#projects">Work</a><a href="#experience">Experience</a><a href="#contact">Contact</a>
       </nav>
