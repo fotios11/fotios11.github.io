@@ -658,7 +658,7 @@
         }
         while (rects.length < 2) rects.push([-9, -9, -9, -9]);
         gl.uniform4fv(U.uCalmA, rects[0]); gl.uniform4fv(U.uCalmB, rects[1]);
-        gl.uniform1f(U.uCalm, 0.35);
+        gl.uniform1f(U.uCalm, portrait ? 0.35 : 0.0);   // phones only: on the dense desktop field it reads as a box
 
         gl.clearColor(0, 0, 0, 0);
         gl.clear(gl.COLOR_BUFFER_BIT);
